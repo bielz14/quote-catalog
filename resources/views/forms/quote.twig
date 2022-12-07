@@ -1,0 +1,45 @@
+{% extends 'layouts.app' %}
+
+{% block content %}
+    <div style="margin: 10%">
+        {% if quote is not empty %}
+            <h2>Edit quote</h2>
+        {% else %}
+            <h2>Create quote</h2>
+        {% endif %}
+        <br><br>
+        <form {% if quote is not empty %}action="{{ route('quote.update', quote.id) }}?page={{ request('page') }}"{% else %}action="{{ route('quote.store') }}"{% endif %} method="POST" enctype="application/x-www-form-urlencoded">
+            {% if quote is not empty %}
+                {{ method_field('PATCH') }}
+            {% endif %}
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <div class="mb-3{% if errors.has('title') is not empty %} has-error{% endif %}">
+                <label for="title" class="form-label">Title</label>
+                {% if quote is not empty %}
+                    <input type="text" class="form-control" id="title" name="title" maxlength="250" value="{{ quote.title }}">
+                {% else %}
+                    <input type="text" class="form-control" id="title" name="title" maxlength="250">
+                {% endif %}
+                {% if errors.has('title') is not empty %}
+                    <div class="error">
+                        {{ errors.first('title') }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                {% if quote is not empty %}
+                    <textarea class="form-control" id="description" name="description" maxlength="3000">{{ quote.description }}</textarea>
+                {% else %}
+                    <textarea class="form-control" id="description" name="description" maxlength="3000"></textarea>
+                {% endif %}
+                {% if errors.has('description') is not empty %}
+                    <div class="error">
+                        {{ errors.first('description') }}
+                    </div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

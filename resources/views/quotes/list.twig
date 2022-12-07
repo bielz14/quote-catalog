@@ -1,0 +1,57 @@
+{% extends 'layouts.app' %}
+
+{% block content %}
+    <section class="vh-100" style="background-color: #eee;">
+        {% if app.session.get('success') %}
+            <div class="success-msg">
+                {{ app.session.remove('success') }}
+            </div>
+            <script>
+                setTimeout(function(){
+                    $('.success-msg').remove();
+                }, 2000);
+            </script>
+
+        {% endif %}
+        <div class="container py-5 h-100">
+            <div class="create-btn-section">
+                <a href="{{ route('quote.create') }}" class="btn btn-success active">New Quote</a>
+            </div>
+            <div class="row d-flex align-items-center h-100">
+                {% if quotes is not empty %}
+                    {% for quote in quotes %}
+                        <div class="col col-lg-6 mb-4 mb-lg-0">
+                            <figure class="bg-white p-3 rounded" style="border-left: .25rem solid #a34e78;">
+                                <blockquote class="blockquote pb-2">
+                                    <span style="color: #4a5568; font-weight: bold">{{ quote.title }}</span>
+                                    <p style="margin-left: 4%">
+                                        {{ quote.description }}
+                                    </p>
+                                </blockquote>
+                                <figcaption class="blockquote-footer mb-0 font-italic">
+                                    {{ quote.user.name }}
+                                </figcaption>
+                                <figcaption class="blockquote-footer mb-0 font-italic custom-date">
+                                    {{ quote.updated_at }}
+                                </figcaption>
+                            </figure>
+                            <div class="create-btn-section">
+                                <a href="{{ route('quote.edit', quote.id) }}{% if request('page') %}?page={{ request('page') }}{% endif %}" class="btn btn-primary active">Edit</a>
+                                <form id="delete-form" action="{{ route('quote.destroy', quote.id) }}{% if request('page') %}?page={{ request('page') }}{% endif %}" method="POST" enctype="application/x-www-form-urlencoded">
+                                    {{ method_field('DELETE') }}
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="sumbit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <!-- Pagination -->
+                    <nav class="pagination">
+                        {{ quotes.links('inc.pagination') }}
+                    </nav>
+                    <!-- end: Pagination -->
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

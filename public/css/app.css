@@ -1,0 +1,25 @@
+.success-msg {
+    padding: 10px;
+    display: inline-block;
+    background: green;
+    color: white;
+}
+
+.error-msg {
+    padding: 10px;
+    display: inline-block;
+    background: red;
+    color: white;
+}
+
+.custom-date {
+    display: inline-block;
+}
+
+#delete-form {
+    display: inline-block;
+}
+
+.error {
+    color: indianred;
+}
